@@ -11,7 +11,6 @@ pipeline {
             steps {
                 dir("applications/aws_frontend") {
                     sh 'terraform init'
-                    sh 'terraform workspace new prod'
                     sh 'terraform workspace list'
                     sh 'terraform workspace select ${params.workspace}'           
                 }    

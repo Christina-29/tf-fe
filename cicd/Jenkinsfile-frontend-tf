@@ -1,8 +1,8 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
-        // choice(name: 'workspace', choices:['uat', 'prod'], description: 'Workspace/environment file to use for deployment')
+        // string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
+        choice(name: 'workspace', choices:['uat', 'prod'], description: 'which Workspace')
         booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
     }
     environment {
@@ -13,9 +13,8 @@ pipeline {
             steps {
                 dir("applications/aws_frontend") {
                     sh 'terraform init'
-                }
-                 
-           }
+                }    
+            }
         }
         stage('Terraform apply') {
             when {

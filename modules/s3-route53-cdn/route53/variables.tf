@@ -25,3 +25,8 @@ variable "www_bucket_alias_zone_id" {
   description = "www-bucket alias to cloudfront zone-id"
   
 }
+variable "common_tags" {
+  description = "Common tags you want applied to all components."
+  default     = {
+  }
+}

@@ -38,6 +38,7 @@ module "cdn" {
 module "route53" {
   source                    = "../../modules/s3-route53-cdn/route53"
   zone_id                   = var.zone_id
+  common_tags = var.common_tags
   domain_name               = var.domain_name
   root_bucket_alias_name    = module.cdn.root_bucket_alias_name
   root_bucket_alias_zone_id = module.cdn.root_bucket_alias_zone_id

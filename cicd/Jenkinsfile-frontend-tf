@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
+        // choice(name: 'workspace', choices:['uat', 'prod'], description: 'Workspace/environment file to use for deployment')
+        booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
+    }
+    environment {
+        HOSTED_ZONE_ID = "Z0028220TJQ7DMP923PW"
+    }
+    stages {
+        stage('Terraform init') {
+            steps {
+                dir("applications/aws_frontend") {
+                    sh 'terraform init'
+                }
+                 
+           }
+        }
+        stage('Terraform apply') {
+            when {
+                not {
+                    equals expected: true, actual: params.destroy
+                }
+            }
+            steps {
+                dir("applications/aws_frontend") {
+                    sh 'terraform apply --auto-approve'
+                    sh 'rm -rf terraform.tfvars'
+                }
+            }
+        }
+        stage('Terraform destory') {
+            when {
+              equals expected: true, actual: params.destroy
+            }  
+            steps{
+              dir("applications/aws_frontend"){                
+                sh 'terraform destroy --auto-approve'
+                sh 'rm -rf terraform.tfvars'                
+              }
+           }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
+           

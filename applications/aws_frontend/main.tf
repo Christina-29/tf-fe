@@ -28,7 +28,7 @@ module "s3" {
   bucket_name = terraform.workspace == "prod" ? "shecan.link" : "${terraform.workspace}.shecan.link"
   domain_name = terraform.workspace == "prod" ? "shecan.link" : "${terraform.workspace}.shecan.link"
   common_tags = { Project = "bookinglet-${terraform.workspace}" }
-  environment = terraform.workspace
+  # environment = terraform.workspace
 }
 
 module "cdn" {
@@ -40,7 +40,7 @@ module "cdn" {
   origin_access_identity    = module.s3.origin_access_identity
   acm_certificate_arn       = module.route53.acm_certificate_arn
   common_tags               = { Project = "bookinglet-${terraform.workspace}" }
-  environment               = terraform.workspace
+  # environment               = terraform.workspace
 }
 
 module "route53" {
@@ -52,5 +52,5 @@ module "route53" {
   www_bucket_alias_name     = module.cdn.www_bucket_alias_name
   www_bucket_alias_zone_id  = module.cdn.www_bucket_alias_zone_id
   ommon_tags                = { Project = "bookinglet-${terraform.workspace}" }
-  environment               = terraform.workspace
+  # environment               = terraform.workspace
 }

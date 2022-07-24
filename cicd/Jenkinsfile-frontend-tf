@@ -5,6 +5,9 @@ pipeline {
         choice(name: 'workspace', choices:['uat', 'prod'], description: 'which Workspace')
         booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
     }
+    environment {
+        DEVOPS_EMAIL        = "connie0972001@gmail.com"
+    }
 
     stages {
         stage('Terraform init') {
@@ -12,7 +15,7 @@ pipeline {
                 dir("applications/aws_frontend") {
                     sh 'terraform init'
                     sh 'terraform workspace list'
-                    sh "terraform workspace select ${params.workspace}"          
+                    sh "terraform workspace select ${params.workspace} || terraform workspace new ${params.workspace}"          
                 }    
             }
         }
@@ -44,6 +47,20 @@ pipeline {
     post {
         always {
             cleanWs()
+        }
+        success {
+            emailext(
+                subject: "${env.JOB_NAME} [${env.workspace}]-[${env.BUILD_NUMBER}] Success",
+                body: """
+                    <p>Jenkins Pipeline: "${env.JOB_NAME}- [${env.workspace}] Summray : </p>
+                    <ul>
+                    <li>Terraform init</li>
+                    <li>Terraform apply or Terraform destroy</li>
+                    </ul>
+                    """,
+                to:"${DEVOPS_EMAIL}",
+                attachLog:true
+            )
         }
     }
 }

@@ -24,7 +24,7 @@ provider "aws" {
 }
 
 module "s3" {
-  source      = "../../modules/aws/front-end//s3"
+  source      = "../../modules/aws/front-end/s3"
   domain_name = lookup(var.domain_name, terraform.workspace)
   bucket_name = lookup(var.bucket_name, terraform.workspace)
   common_tags = { Project = "bookinglet-${terraform.workspace}" }
@@ -32,10 +32,10 @@ module "s3" {
 
 module "cdn" {
   source                    = "../../modules/aws/front-end/cdn"
-  www_regional_domain_name  = module.s3.www_bucket_regional_domain_name
-  root_regional_domain_name = module.s3.root_bucket_regional_domain_name
   domain_name               = lookup(var.domain_name, terraform.workspace)
   bucket_name               = lookup(var.bucket_name, terraform.workspace)
+  www_regional_domain_name  = module.s3.www_bucket_regional_domain_name
+  root_regional_domain_name = module.s3.root_bucket_regional_domain_name
   origin_access_identity    = module.s3.origin_access_identity
   acm_certificate_arn       = module.route53.acm_certificate_arn
   common_tags               = { Project = "bookinglet-${terraform.workspace}" }

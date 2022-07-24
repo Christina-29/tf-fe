@@ -51,6 +51,6 @@ module "route53" {
   root_bucket_alias_zone_id = module.cdn.root_bucket_alias_zone_id
   www_bucket_alias_name     = module.cdn.www_bucket_alias_name
   www_bucket_alias_zone_id  = module.cdn.www_bucket_alias_zone_id
-  ommon_tags                = { Project = "bookinglet-${terraform.workspace}" }
+  common_tags                = { Project = "bookinglet-${terraform.workspace}" }
   # environment               = terraform.workspace
 }

@@ -5,14 +5,14 @@ pipeline {
         choice(name: 'workspace', choices:['uat', 'prod'], description: 'which Workspace')
         booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
     }
-    environment {
-        HOSTED_ZONE_ID = "Z0028220TJQ7DMP923PW"
-    }
+
     stages {
         stage('Terraform init') {
             steps {
                 dir("applications/aws_frontend") {
                     sh 'terraform init'
+                    sh 'terraform workspace list'
+                    sh 'terraform workspace select ${params.workspace}'           
                 }    
             }
         }
